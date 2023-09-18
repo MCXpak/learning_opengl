@@ -137,7 +137,7 @@ int main()
 
         //activate shader
         ourShader.use();
-
+        //ourShader.setFloat("offset", 0.5);
         // update the uniform color
         //float timeValue = glfwGetTime();
         //float greenValue = sin(timeValue) / 2.0f + 0.5f;

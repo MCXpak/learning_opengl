@@ -112,6 +112,7 @@ public:
     void setFloat(const std::string& name, float value) const
     {
         glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
+        std::cout << "Using" << name.c_str() << " and " << value;
     }
 };
 
