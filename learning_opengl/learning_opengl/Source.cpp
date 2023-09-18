@@ -4,24 +4,29 @@
 
 const char* vertexShaderSource = "#version 330 core\n"
 "layout (location = 0) in vec3 aPos;\n"
+"out vec4 vertexColor;\n"
 "void main()\n"
 "{\n"
 "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+"   vertexColor = vec4(0.5, 0.0, 0.0, 1.0);\n"
 "}\0";
 
 const char* fragmentShaderSourceT1 = "#version 330 core\n"
 "out vec4 FragColor;\n"
+"uniform vec4 ourColor;"
 "void main()\n"
 "{\n"
-"    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+"   FragColor = ourColor;\n"
 "}\n";
 
 const char* fragmentShaderSourceT2 = "#version 330 core\n"
 "out vec4 FragColor;\n"
 "void main()\n"
 "{\n"
-"    FragColor = vec4(1.0f, 1.0f, 0.0f, 1.0f);\n"
+"    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
 "}\n";
+
+
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
@@ -34,7 +39,6 @@ int main()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-    
     GLFWwindow* window = glfwCreateWindow(800, 600, "LearnOpenGL", nullptr, nullptr);
     if (window == nullptr)
     {
@@ -51,6 +55,12 @@ int main()
         std::cout << "Failed to initialize GLAD" << std::endl;
         return -1;
     }
+
+    float triangle[] = {
+        0.0f, 0.5f, 0.0f,
+        0.5f, 0.0f, 0.0f,
+        -0.5f, 0.0f, 0.0f
+    };
 
     float vertices[] = {
      0.5f,  0.5f, 0.0f,  // top right
@@ -93,16 +103,16 @@ int main()
     // unsigned int VAOs[2], VBOs[2] as well
 
     //First Triangle
-    unsigned int VAO_TriangleOne;
-    glGenVertexArrays(1, &VAO_TriangleOne);
+    unsigned int VAO;
+    glGenVertexArrays(1, &VAO);
 
-    glBindVertexArray(VAO_TriangleOne);
+    glBindVertexArray(VAO);
 
-    unsigned int VBO_TriangleOne;
-    glGenBuffers(1, &VBO_TriangleOne);
+    unsigned int VBO;
+    glGenBuffers(1, &VBO);
 
-    glBindBuffer(GL_ARRAY_BUFFER, VBO_TriangleOne);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(triangleOne), triangleOne, GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(triangle), triangle, GL_STATIC_DRAW);
 
     //unsigned int EBO;
     //glGenBuffers(1, &EBO);
@@ -117,19 +127,19 @@ int main()
     glEnableVertexAttribArray(0);
 
     //Second Triangle
-    unsigned int VAO_TriangleTwo;
-    glGenVertexArrays(1, &VAO_TriangleTwo);
+    //unsigned int VAO_TriangleTwo;
+    //glGenVertexArrays(1, &VAO_TriangleTwo);
+    
+    //glBindVertexArray(VAO_TriangleTwo);
 
-    glBindVertexArray(VAO_TriangleTwo);
+    //unsigned int VBO_TriangleTwo;
+    //glGenBuffers(1, &VBO_TriangleTwo);
 
-    unsigned int VBO_TriangleTwo;
-    glGenBuffers(1, &VBO_TriangleTwo);
+    //glBindBuffer(GL_ARRAY_BUFFER, VBO_TriangleTwo);
+    //glBufferData(GL_ARRAY_BUFFER, sizeof(triangleTwo), triangleTwo, GL_STATIC_DRAW);
 
-    glBindBuffer(GL_ARRAY_BUFFER, VBO_TriangleTwo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(triangleTwo), triangleTwo, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
+    //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    //glEnableVertexAttribArray(0);
 
 
     //Shaders
@@ -210,12 +220,22 @@ int main()
 
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
+
+        //activate shader
         glUseProgram(shaderProgramT1);
-        glBindVertexArray(VAO_TriangleOne);
+
+        // update the uniform color
+        float timeValue = glfwGetTime();
+        float greenValue = sin(timeValue) / 2.0f + 0.5f;
+        int vertexColorLocation = glGetUniformLocation(shaderProgramT1, "ourColor");
+        glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
+
+        
+        glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 3);
-        glUseProgram(shaderProgramT2);
-        glBindVertexArray(VAO_TriangleTwo);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        //glUseProgram(shaderProgramT2);
+        //glBindVertexArray(VAO_TriangleTwo);
+        //glDrawArrays(GL_TRIANGLES, 0, 3);
         glBindVertexArray(0);
     }
 

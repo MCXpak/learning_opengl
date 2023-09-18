@@ -1,2 +1,3 @@
 ﻿  Source.cpp
+C:\Users\moura\OneDrive\Documents\Programming\learning_opengl\learning_opengl\learning_opengl\Source.cpp(228,25): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
   learning_opengl.vcxproj -> C:\Users\moura\OneDrive\Documents\Programming\learning_opengl\learning_opengl\x64\Debug\learning_opengl.exe
