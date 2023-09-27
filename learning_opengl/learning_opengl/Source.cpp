@@ -1,9 +1,13 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include "Shader_s.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
+
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
@@ -125,10 +129,11 @@ int main()
     }
 
     stbi_image_free(data2); //free image memory
-    
 
     Shader ourShader("./shader.vs", "./shader.fs");
 
+    unsigned int transformLoc = glGetUniformLocation(ourShader.ID, "transform");
+    
 
     while (!glfwWindowShouldClose(window))
     {
@@ -146,6 +151,13 @@ int main()
         ourShader.setInt("texture1", 0);
         ourShader.setInt("texture2", 1);
         ourShader.setFloat("mixValue", mixValue);
+
+
+        glm::mat4 trans = glm::mat4(1.0f);
+        trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
+        trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+        trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+        glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
         
         //ourShader.setFloat("offset", 0.5);
         // update the uniform color
