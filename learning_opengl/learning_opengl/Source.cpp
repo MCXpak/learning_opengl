@@ -154,9 +154,10 @@ int main()
 
 
         glm::mat4 trans = glm::mat4(1.0f);
-        trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
+        trans = glm::translate(trans, glm::vec3(0.6f, -0.6f, 0.0f));
         trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
-        trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+        trans = glm::translate(trans, glm::vec3(0.1f, -0.1f, 0.0f));
+        
         glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
         
         //ourShader.setFloat("offset", 0.5);
@@ -172,6 +173,21 @@ int main()
         glBindTexture(GL_TEXTURE_2D, texture2);
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+        glm::mat4 trans2 = glm::mat4(1.0f);
+        trans2 = glm::translate(trans2, glm::vec3(-0.6f, 0.6f, 0.0f));
+        trans2 = glm::rotate(trans2, (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
+
+        glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans2));
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+        glm::mat4 trans3 = glm::mat4(1.0f);
+        trans3 = glm::translate(trans3, glm::vec3(0.6f, 0.6f, 0.0f));
+        trans3 = glm::scale(trans3, glm::vec3(abs(sin((float)glfwGetTime())), abs(sin((float)glfwGetTime())), 1.0f));
+
+        glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans3));
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
         //glDrawArrays(GL_TRIANGLES, 0, 3);
         //glUseProgram(shaderProgramT2);
         //glBindVertexArray(VAO_TriangleTwo);
